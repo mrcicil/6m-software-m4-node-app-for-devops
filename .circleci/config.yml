@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
-  heroku: circleci/heroku@2.0.0
+  # heroku: circleci/heroku@2.0.0
 jobs:
   build:
     docker:
@@ -11,9 +11,10 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run: |
-          echo "Installing dependencies..."
-          npm install
+          # if got orb dont need to run anymore
+      # - run: |
+      #     echo "Installing dependencies..."
+      #     npm install
   test:
     docker:
       - image: cimg/node:16.10
@@ -25,32 +26,32 @@ jobs:
           echo "Running tests..."
           npm run test
   
-  publish:
-    executor: docker/docker
-    steps:
-      - setup_remote_docker
-      - checkout
-      - docker/check:
-          docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
-          docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
-      - docker/build:
-          image: wongshennan/test_repository
-      - docker/push:
-          image: wongshennan/test_repository
-  deploy:
-    docker:
-      - image: cimg/node:16.10
-    steps:
-      - setup_remote_docker      
-      - heroku/install
-      - checkout
-      - run:
-          name: Heroku Container Push
-          command: | 
-              heroku container:login
-              heroku stack:set container -a shennan-su-devops
-              heroku container:push web -a shennan-su-devops
-              heroku container:release web -a shennan-su-devops
+  # publish:
+  #   executor: docker/docker
+  #   steps:
+  #     - setup_remote_docker
+  #     - checkout
+  #     - docker/check:
+  #         docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
+  #         docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
+  #     - docker/build:
+  #         image: wongshennan/test_repository
+  #     - docker/push:
+  #         image: wongshennan/test_repository
+  # deploy:
+  #   docker:
+  #     - image: cimg/node:16.10
+  #   steps:
+  #     - setup_remote_docker      
+  #     - heroku/install
+  #     - checkout
+  #     - run:
+  #         name: Heroku Container Push
+  #         command: | 
+  #             heroku container:login
+  #             heroku stack:set container -a shennan-su-devops
+  #             heroku container:push web -a shennan-su-devops
+  #             heroku container:release web -a shennan-su-devops
 
 workflows:
   simple_workflow:
@@ -59,9 +60,9 @@ workflows:
       - test:
           requires:
             - build
-      - publish:
-          requires:
-            - test
-      - deploy:
-          requires:
-            - publish
+      # - publish:
+      #     requires:
+      #       - test
+      # - deploy:
+      #     requires:
+      #       - publish
