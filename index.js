@@ -6,6 +6,10 @@ const print = require("./controller");
 
 app.get('/', print);
 
+const test = require("./test");
+
+app.get('/home', test);
+
 app.listen(process.env.PORT, ()=>{
     console.log(`Listening to port ${process.env.PORT}`)
 })
