@@ -4,18 +4,19 @@ orbs:
   docker: circleci/docker@2.1.4
   heroku: circleci/heroku@2.0.0
 jobs:
-  build:
-    docker:
-      - image: cimg/node:16.10
+  # build:
+  #   docker:
+  #     - image: cimg/node:16.10
 
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-          # if got orb dont need to run anymore
-      # - run: |
-      #     echo "Installing dependencies..."
-      #     npm install
+  #   steps:
+  #     - checkout
+  #     - node/install-packages:
+  #         pkg-manager: npm
+
+  # if got orb dont need to run anymore
+  # - run: |
+  #     echo "Installing dependencies..."
+  #     npm install
   # test:
   #   docker:
   #     - image: cimg/node:16.10
@@ -27,18 +28,18 @@ jobs:
   #         echo "Running tests..."
   #         npm run test
 
-  publish:
-    executor: docker/docker
-    steps:
-      - setup_remote_docker
-      - checkout
-      - docker/check
-      #         docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
-      #         docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
-      - docker/build:
-          image: mrcicil/test-repo
-      - docker/push:
-          image: mrcicil/test-repo
+  # publish:
+  #   executor: docker/docker
+  #   steps:
+  #     - setup_remote_docker
+  #     - checkout
+  #     - docker/check
+  #     #         docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
+  #     #         docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
+  #     - docker/build:
+  #         image: mrcicil/test-repo
+  #     - docker/push:
+  #         image: mrcicil/test-repo
   deploy:
     docker:
       - image: cimg/node:16.10
@@ -57,13 +58,13 @@ jobs:
 workflows:
   simple_workflow:
     jobs:
-      - build
+      # - build
       # - test:
       #     requires:
       #       - build
-      - publish:
-          requires:
-            - build
+      # - publish:
+      #     requires:
+      #       - build
       - deploy:
-          requires:
-            - publish
+          # requires:
+          #   - publish
