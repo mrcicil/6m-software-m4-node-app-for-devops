@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       - image: cimg/node:16.10
-      
+
     steps:
       - checkout
       - node/install-packages:
@@ -16,25 +16,25 @@ jobs:
       # - run: |
       #     echo "Installing dependencies..."
       #     npm install
-  test:
-    docker:
-      - image: cimg/node:16.10
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run: |
-          echo "Running tests..."
-          npm run test
-  
+  # test:
+  #   docker:
+  #     - image: cimg/node:16.10
+  #   steps:
+  #     - checkout
+  #     - node/install-packages:
+  #         pkg-manager: npm
+  #     - run: |
+  #         echo "Running tests..."
+  #         npm run test
+
   publish:
     executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
-  #         docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
-  #         docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
+      #         docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
+      #         docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
       - docker/build:
           image: mrcicil/test-repo
       - docker/push:
@@ -43,27 +43,27 @@ jobs:
     docker:
       - image: cimg/node:16.10
     steps:
-      - setup_remote_docker      
+      - setup_remote_docker
       - heroku/install
       - checkout
       - run:
           name: Heroku Container Push
-          command: | 
-              heroku container:login
-              heroku stack:set container -a mrcicil-su-devops
-              heroku container:push web -a mrcicil-su-devops
-              heroku container:release web -a mrcicil-su-devops
+          command: |
+            heroku container:login
+            heroku stack:set container -a k8test
+            heroku container:push web -a k8test
+            heroku container:release web -a k8test
 
 workflows:
   simple_workflow:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      # - test:
+      #     requires:
+      #       - build
       - publish:
           requires:
-            - test
+            - build
       - deploy:
           requires:
             - publish
